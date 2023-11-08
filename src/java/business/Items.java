@@ -44,6 +44,10 @@ public class Items implements Serializable {
     }
 
     public double getTotalPrice() {
+        this.totalPrice = 0;
+        for(Ingredient i : this.ing){
+            totalPrice =+ i.getPrice();
+        }
         return totalPrice;
     }
 
@@ -57,5 +61,14 @@ public class Items implements Serializable {
 
     public void setIng(List<Ingredient> ing) {
         this.ing = ing;
+    }
+    
+    public String ingString(){
+        String ingString = "";
+        for(Ingredient ing : this.ing){
+            ingString += ing.getName() + " ";
+        }
+            
+        return ingString;
     }
 }

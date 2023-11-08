@@ -13,11 +13,11 @@
         <title>Register Now</title>
     </head>
     <body>
+        
         <h1>Register</h1>
-        <form action="Public" method="post">
-            
+        <form action="Public" method="POST">
+            ${errorMessage}
             <input type="hidden" name="action" value="register">
-            
             <div>
             <label>Username: </label>
             <input type="Text" name="username"><br/>

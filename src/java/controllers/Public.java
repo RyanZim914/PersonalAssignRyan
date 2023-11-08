@@ -22,13 +22,14 @@ import java.util.logging.Logger;
 import business.Items;
 import java.util.LinkedHashMap;
 import java.util.List;
+
 /**
  *
  * @author ryanz
  */
 @WebServlet(name = "Public", urlPatterns = {"/Public"})
 public class Public extends HttpServlet {
-    
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -42,74 +43,97 @@ public class Public extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         
+        
+        String errorMessage = "";
         String url = "";
-        
+
         String action = request.getParameter("action");
-        
+
         LinkedHashMap<Integer, Items> items = new LinkedHashMap();
-        
+
         ArrayList<Ingredient> Ing = new ArrayList<>();
         //ArrayList<Items> items = new ArrayList<>();
         Ingredient Ing1 = new Ingredient(1, "Lettuce", 12);
-        Ingredient Ing2 = new Ingredient(3, "Lettuce", 12);
-        Ingredient Ing3 = new Ingredient(2, "Lettuce", 12);
-        
+        Ingredient Ing2 = new Ingredient(3, "Meat", 12);
+        Ingredient Ing3 = new Ingredient(2, "Cheese", 12);
+
         Ing.add(Ing1);
         Ing.add(Ing2);
         Ing.add(Ing3);
-               
+
         Items i1 = new Items(11, "Soft Taco", 30, Ing);
         Items i2 = new Items(12, "Hard Taco", 30, Ing);
         Items i3 = new Items(13, "Taco Pizza", 30, Ing);
         //int ItemID, String Name, double TotalPrice, ArrayList<Ingredient> ing
-        
+
         items.put(i1.getItemID(), i1);
         items.put(i2.getItemID(), i2);
         items.put(i3.getItemID(), i3);
-        
-        if (action == null){
-            action = "getList";
-            request.setAttribute("list", items);
-             url = "/ListItems.jsp";
+
+        if (action == null) {
+            action = "index";
+//            request.setAttribute("list", items);
+
         }
-        
-        
-        
-        switch(action){
-            case "getList":{
-                request.setAttribute("list", items);
+
+        switch (action) {
+            case "index":{
+                url = "/index.jsp";
+                break;
             }
-                case "register":{
-                    String username = request.getParameter("username");
-                    String firstname = request.getParameter("firstname");
-                    String lastname = request.getParameter("lastname");
-                    String email = request.getParameter("email");
-                    String password = request.getParameter("password");
+            case "getList": {
+                request.setAttribute("list", items);
+                url = "/ListItems.jsp";
+                break;
+
+            }
+            case "registerForm": {
+                url = "/Register.jsp";
+                break;
+            }
+            
+            case "register": {
+                
+                String username = request.getParameter("username");
+                String firstname = request.getParameter("firstname");
+                String lastname = request.getParameter("lastname");
+                String email = request.getParameter("email");
+                String password = request.getParameter("password");
+                
+                User newUser = new User(username, firstname, lastname, email, password);
+                
+                
+               if (username == (null) || username.isEmpty() || firstname == null || lastname == null || email == null || password == null) {   
+//                    request.setAttribute("username", username);
+//                    request.setAttribute("firstname", firstname);
+//                    request.setAttribute("lastname", lastname);
+//                    request.setAttribute("email", email);
+//                    request.setAttribute("password", password);
                     
-                    if (username == null && firstname == null || lastname == null || email == null || password == null){
-                        request.setAttribute("errorMessage", "something is null please do your fucking job you idiot.");
-                    }else{
-                    
-                    try {
-                        User u = new User(username,firstname,lastname,email,password);
-                        UserDB.insertIntoUser(u);
-                    } catch (SQLException ex) {
-                        Logger.getLogger(Public.class.getName()).log(Level.SEVERE, null, ex);
+                    errorMessage += "You idiot";
+                    url = "/Register.jsp";
+               }else{
+                
+                    url = "/ListItems.jsp";
+//                    try {
+//                        User u = new User(username,firstname,lastname,email,password);
+//                        UserDB.insertIntoUser(u);
+//                    } catch (SQLException ex) {
+//                        Logger.getLogger(Public.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                   }
-               }
-                case "login": {
-                    
-                }
                 
-                
-                
-                getServletContext()
+               break;
+            }
+            case "login": {
+
+            }
+
+        }
+        request.setAttribute("errorMessage", errorMessage);
+        
+        getServletContext()
                 .getRequestDispatcher(url)
                 .forward(request, response);
-                
-           }
-        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -16,7 +16,8 @@
         <h1>List Of Items</h1>
     <c:forEach var="item" items="${list}">
         <h1>${item.value.name}</h1>
-        
+            ${item.value.ingString()}
     </c:forEach>
+
     </body>
 </html>

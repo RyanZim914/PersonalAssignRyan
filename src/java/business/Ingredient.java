@@ -11,33 +11,33 @@ import java.io.Serializable;
  * @author ryanz
  */
 public class Ingredient implements Serializable{
-    private int IngredientId;
-    private String Name;
+    private int ingredientID;
+    private String name;
     private double price;
 
     public Ingredient() {
     }
 
     public Ingredient(int IngredientId, String Name, double price) {
-        this.IngredientId = IngredientId;
-        this.Name = Name;
+        this.ingredientID = IngredientId;
+        this.name = Name;
         this.price = price;
     }
 
     public int getIngredientId() {
-        return IngredientId;
+        return ingredientID;
     }
 
     public void setIngredientId(int IngredientId) {
-        this.IngredientId = IngredientId;
+        this.ingredientID = IngredientId;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String Name) {
-        this.Name = Name;
+        this.name = Name;
     }
 
     public double getPrice() {
