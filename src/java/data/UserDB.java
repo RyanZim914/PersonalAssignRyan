@@ -24,15 +24,15 @@ public class UserDB {
         PreparedStatement ps = null;
 
         String query
-                = "INSERT INTO user (UserID, Email, FirstName, LastName, Username, Password) "
-                + "VALUES (?, ?, ?, ?, ?, ?)";
+                = "INSERT INTO user (userID,firstName, lastName, userName, email, password) "
+                + "VALUES ( ?, ?, ?, ?, ?, ?)";
         try {
             ps = connection.prepareStatement(query);
             ps.setInt(1, user.getUserID());
-            ps.setString(2, user.getEmail());
-            ps.setString(3, user.getFirstName());
-            ps.setString(4, user.getLastName());
-            ps.setString(5, user.getUserName());
+            ps.setString(2, user.getFirstName());
+            ps.setString(3, user.getLastName());
+            ps.setString(4, user.getUserName());
+            ps.setString(5, user.getEmail());
             ps.setString(6, user.getPassword());
             return ps.executeUpdate();
         } catch (SQLException e) {

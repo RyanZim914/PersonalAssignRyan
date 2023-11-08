@@ -22,7 +22,7 @@ public class User implements Serializable{
     }
 
     public User(String UserName, String FirstName, String LastName, String Email, String Password) {
-        this.UserID++;
+        this.UserID = 0;
         this.FirstName = FirstName;
         this.LastName = LastName;
         this.UserName = UserName;

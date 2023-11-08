@@ -24,11 +24,11 @@
             </div>
             <div>
             <label>First Name: </label>
-            <input type="Text" name="firstName"><br/>
+            <input type="Text" name="firstname"><br/>
             </div>
             <div>
             <label>Last Name: </label>
-            <input type="Text" name="lastName"><br/>
+            <input type="Text" name="lastname"><br/>
             </div>
             <div>
             <label>Email: </label>

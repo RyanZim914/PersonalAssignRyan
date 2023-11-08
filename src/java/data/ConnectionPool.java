@@ -17,7 +17,7 @@ public class ConnectionPool {
         try {
             InitialContext ic = new InitialContext();
             //This links up with the resource tag in context.xml
-            dataSource = (DataSource) ic.lookup("java:/comp/env/jdbc/movierealms");
+            dataSource = (DataSource) ic.lookup("java:/comp/env/jdbc/capstonepersonalassignment");
         } catch (NamingException e) {
            LOG.log(Level.SEVERE, "*** failed on datasource lookup", e);
         }

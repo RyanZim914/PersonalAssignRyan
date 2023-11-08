@@ -103,27 +103,25 @@ public class Public extends HttpServlet {
                 User newUser = new User(username, firstname, lastname, email, password);
                 
                 
-               if (username == (null) || username.isEmpty() || firstname == null || lastname == null || email == null || password == null) {   
+//              if (username == (null) || username.isEmpty() || firstname == null || lastname == null || email == null || password == null) {   
 //                    request.setAttribute("username", username);
 //                    request.setAttribute("firstname", firstname);
 //                    request.setAttribute("lastname", lastname);
 //                    request.setAttribute("email", email);
 //                    request.setAttribute("password", password);
                     
-                    errorMessage += "You idiot";
-                    url = "/Register.jsp";
-               }else{
-                
-                    url = "/ListItems.jsp";
-//                    try {
+//                    errorMessage += "You idiot";
+                    
+                    try {
 //                        User u = new User(username,firstname,lastname,email,password);
-//                        UserDB.insertIntoUser(u);
-//                    } catch (SQLException ex) {
-//                        Logger.getLogger(Public.class.getName()).log(Level.SEVERE, null, ex);
+                        UserDB.insertIntoUser(newUser);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(Public.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                
+                url = "/index.jsp";
                break;
             }
+            
             case "login": {
 
             }
