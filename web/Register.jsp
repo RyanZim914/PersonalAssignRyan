@@ -20,7 +20,7 @@
             <input type="hidden" name="action" value="register">
             <div>
             <label>Username: </label>
-            <input type="Text" name="username"><br/>
+            <input type="Text" name="username" value=""><br/>
             </div>
             <div>
             <label>First Name: </label>

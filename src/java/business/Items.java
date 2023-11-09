@@ -20,11 +20,9 @@ public class Items implements Serializable {
     
     public Items(){}
 
-    public Items(int ItemID, String Name, double TotalPrice, ArrayList<Ingredient> ing) {
-        this.itemID = ItemID;
+    public Items(String Name) {
+        this.itemID = 0;
         this.name = Name;
-        this.totalPrice = TotalPrice;
-        this.ing = ing;
     }
 
     public int getItemID() {
@@ -45,14 +43,15 @@ public class Items implements Serializable {
 
     public double getTotalPrice() {
         this.totalPrice = 0;
+        if (this.ing == null){
+            return totalPrice;
+        }else{
         for(Ingredient i : this.ing){
             totalPrice =+ i.getPrice();
         }
         return totalPrice;
-    }
-
-    public void setTotalPrice(double TotalPrice) {
-        this.totalPrice = TotalPrice;
+        }
+        
     }
 
     public List<Ingredient> getIng() {
@@ -64,11 +63,16 @@ public class Items implements Serializable {
     }
     
     public String ingString(){
-        String ingString = "";
+        if(this.ing == null){
+            return "";
+        }else{
+        
+        String ingString = "It Has ";
         for(Ingredient ing : this.ing){
-            ingString += ing.getName() + " ";
-        }
-            
+            ingString += ing.getName() + " & ";
+            }
         return ingString;
+        }
+        
     }
 }

@@ -18,8 +18,8 @@ public class Ingredient implements Serializable{
     public Ingredient() {
     }
 
-    public Ingredient(int IngredientId, String Name, double price) {
-        this.ingredientID = IngredientId;
+    public Ingredient(String Name, double price) {
+        this.ingredientID = 0;
         this.name = Name;
         this.price = price;
     }

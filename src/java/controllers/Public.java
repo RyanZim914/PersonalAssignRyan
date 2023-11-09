@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import business.Items;
+import data.IngredientDB;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -48,32 +49,9 @@ public class Public extends HttpServlet {
         String url = "";
 
         String action = request.getParameter("action");
-
-        LinkedHashMap<Integer, Items> items = new LinkedHashMap();
-
-        ArrayList<Ingredient> Ing = new ArrayList<>();
-        //ArrayList<Items> items = new ArrayList<>();
-        Ingredient Ing1 = new Ingredient(1, "Lettuce", 12);
-        Ingredient Ing2 = new Ingredient(3, "Meat", 12);
-        Ingredient Ing3 = new Ingredient(2, "Cheese", 12);
-
-        Ing.add(Ing1);
-        Ing.add(Ing2);
-        Ing.add(Ing3);
-
-        Items i1 = new Items(11, "Soft Taco", 30, Ing);
-        Items i2 = new Items(12, "Hard Taco", 30, Ing);
-        Items i3 = new Items(13, "Taco Pizza", 30, Ing);
-        //int ItemID, String Name, double TotalPrice, ArrayList<Ingredient> ing
-
-        items.put(i1.getItemID(), i1);
-        items.put(i2.getItemID(), i2);
-        items.put(i3.getItemID(), i3);
-
+        
         if (action == null) {
             action = "index";
-//            request.setAttribute("list", items);
-
         }
 
         switch (action) {
@@ -82,7 +60,7 @@ public class Public extends HttpServlet {
                 break;
             }
             case "getList": {
-                request.setAttribute("list", items);
+                request.setAttribute("list", null);  //Come back later
                 url = "/ListItems.jsp";
                 break;
 
@@ -103,15 +81,15 @@ public class Public extends HttpServlet {
                 User newUser = new User(username, firstname, lastname, email, password);
                 
                 
-//              if (username == (null) || username.isEmpty() || firstname == null || lastname == null || email == null || password == null) {   
-//                    request.setAttribute("username", username);
-//                    request.setAttribute("firstname", firstname);
-//                    request.setAttribute("lastname", lastname);
-//                    request.setAttribute("email", email);
-//                    request.setAttribute("password", password);
+              if (username == (null) || username.isEmpty() || firstname == null || lastname == null || email == null || password == null) {   
+                    request.setAttribute("username", username);
+                    request.setAttribute("firstname", firstname);
+                    request.setAttribute("lastname", lastname);
+                    request.setAttribute("email", email);
+                    request.setAttribute("password", password);
                     
-//                    errorMessage += "You idiot";
-                    
+                    errorMessage += "You idiot";
+              }
                     try {
 //                        User u = new User(username,firstname,lastname,email,password);
                         UserDB.insertIntoUser(newUser);
@@ -123,8 +101,63 @@ public class Public extends HttpServlet {
             }
             
             case "login": {
-
+                break;
             }
+
+            case "AddIngToItem":{
+                action = "temp";
+                /*
+                Get Ingredient
+                Add ing to ing list in item
+                Make Item and fill the ingredient List
+                take the itemid and ingredientId and put it a foreign table
+                then add to item db but leave out the inglist
+                 */
+                
+                int ingredID = Integer.parseInt(request.getParameter("ingID"));
+                Ingredient ing;
+                List<Ingredient> ings = new ArrayList<>();//add this to the Item
+                try {
+                    ing = IngredientDB.SelectIngredient(ingredID);
+                    ings.add(ing); //added to the array
+                } catch (SQLException ex) {
+                    Logger.getLogger(Public.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                Items item = new Items();
+                item.setIng(ings);
+                request.setAttribute("itemDescription", item.ingString());
+                request.setAttribute("total", item.getTotalPrice());
+                
+                
+            }
+           case "temp":{
+                url="/CreateItem.jsp";
+                LinkedHashMap<Integer, Ingredient> list = new LinkedHashMap<>();
+                try {
+                     list = IngredientDB.selectAllIngredients();
+                     request.setAttribute("ingredients", list);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Public.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            }
+            
+            case "CreateItem":{}
+                String itemName = request.getParameter("ItemName");
+                Items item = new Items(itemName);
+                break;
+            case "addIngredient":{
+                String name = request.getParameter("ingName");
+                double price = Double.parseDouble(request.getParameter("ingPrice"));
+                url="/index.jsp";
+                        
+            try {
+                IngredientDB.insertIntoIngredient(new Ingredient(name, price));
+            } catch (SQLException ex) {
+                Logger.getLogger(Public.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            }
+
 
         }
         request.setAttribute("errorMessage", errorMessage);
