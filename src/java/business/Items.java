@@ -16,15 +16,20 @@ public class Items implements Serializable {
     private int itemID;
     private String name;
     private double totalPrice;
-    private List<Ingredient> ing;
+    private List<Ingredient> ing = new ArrayList<>();
     
-    public Items(){}
+    public Items(){
+        this.itemID=0;
+    }
 
     public Items(String Name) {
         this.itemID = 0;
         this.name = Name;
     }
-
+    public void setTotalPrice(double TotalPrice){
+        this.totalPrice = TotalPrice;
+    }
+    
     public int getItemID() {
         return itemID;
     }
@@ -47,8 +52,9 @@ public class Items implements Serializable {
             return totalPrice;
         }else{
         for(Ingredient i : this.ing){
-            totalPrice =+ i.getPrice();
+            totalPrice += i.getPrice();
         }
+       
         return totalPrice;
         }
         
@@ -58,8 +64,8 @@ public class Items implements Serializable {
         return ing;
     }
 
-    public void setIng(List<Ingredient> ing) {
-        this.ing = ing;
+    public void setIng(Ingredient ing) {
+        this.ing.add(ing);
     }
     
     public String ingString(){
@@ -67,12 +73,19 @@ public class Items implements Serializable {
             return "";
         }else{
         
-        String ingString = "It Has ";
-        for(Ingredient ing : this.ing){
-            ingString += ing.getName() + " & ";
-            }
-        return ingString;
-        }
+        String ingString = "It Has " + this.ing.get(0).getName();
+        Ingredient temp = this.ing.get(0); //Save it
+        this.ing.remove(0); //Temporarly remove first ingredient from list
         
+        for(Ingredient ing : this.ing){
+            ingString +=  " & " + ing.getName() ;
+            }
+        
+        this.ing.add(0, temp); //added it right back & same index
+        return ingString;
+        } 
+    }
+        public void ClearIng(){
+            this.ing.clear();
     }
 }

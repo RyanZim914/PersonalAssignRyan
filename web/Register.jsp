@@ -13,6 +13,7 @@
         <title>Register Now</title>
     </head>
     <body>
+        <a href="./index.jsp">Home</a>  
         
         <h1>Register</h1>
         <form action="Public" method="POST">
@@ -36,7 +37,7 @@
             </div>
             <div>
             <label>Password: </label>
-            <input type="Text" name="password"><br/>
+            <input type="password" name="password"><br/>
             </div>
             <input type="submit" value="Register">
         </form>

@@ -7,6 +7,7 @@ package data;
 import business.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,4 +49,50 @@ public class UserDB {
             }
         }
     }
+    public static User getUser(String username, String password) throws SQLException {
+    ConnectionPool pool = ConnectionPool.getInstance();
+    Connection connection = pool.getConnection();
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+
+    String query = "SELECT * FROM user WHERE userName = ? AND password = ?";
+    try {
+        ps = connection.prepareStatement(query);
+        ps.setString(1, username);
+        ps.setString(2, password);
+        rs = ps.executeQuery();
+
+        if (rs.next()) {
+            // User found, create and return the User object
+            User user = new User();
+            user.setUserID(rs.getInt("userID"));
+            user.setFirstName(rs.getString("firstName"));
+            user.setLastName(rs.getString("lastName"));
+            user.setUserName(rs.getString("userName"));
+            user.setEmail(rs.getString("email"));
+            user.setPassword(rs.getString("password"));
+            return user;
+        } else {
+            // No user found with the given credentials
+            return null;
+        }
+    } catch (SQLException e) {
+        LOG.log(Level.SEVERE, "*** select user by username and password sql", e);
+        throw e;
+    } finally {
+        try {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ps != null) {
+                ps.close();
+            }
+            pool.freeConnection(connection);
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "*** select user by username and password null pointer??", e);
+            throw e;
+        }
+    }
+}
+    
 }

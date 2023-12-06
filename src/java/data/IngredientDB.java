@@ -20,7 +20,8 @@ import java.util.logging.Logger;
  * @author ryanz
  */
 public class IngredientDB {
-        private static final Logger LOG = Logger.getLogger(UserDB.class.getName());
+
+    private static final Logger LOG = Logger.getLogger(UserDB.class.getName());
 
     public static int insertIntoIngredient(Ingredient ing) throws SQLException {
         ConnectionPool pool = ConnectionPool.getInstance();
@@ -49,13 +50,14 @@ public class IngredientDB {
             }
         }
     }
-        public static LinkedHashMap<Integer, Ingredient> selectAllIngredients() throws SQLException {
+
+    public static LinkedHashMap<Integer, Ingredient> selectAllIngredients() throws SQLException {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
         ResultSet rs = null;
         LinkedHashMap<Integer, Ingredient> ingList = new LinkedHashMap<Integer, Ingredient>();
-        
+
         String query = "SELECT * FROM ingredient ";
         try {
             ps = connection.prepareStatement(query);
@@ -86,20 +88,20 @@ public class IngredientDB {
             }
         }
     }
-        
-public static Ingredient SelectIngredient(int ingID) throws SQLException {
+
+    public static Ingredient SelectIngredient(int ingID) throws SQLException {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
         ResultSet rs = null;
         //LinkedHashMap<Integer, Ingredient> ingList = new LinkedHashMap<Integer, Ingredient>();
-        
+
         String query = "SELECT * FROM ingredient Where ingredientID = ?";
         try {
             ps = connection.prepareStatement(query);
             ps.setInt(1, ingID);
             rs = ps.executeQuery();
-                Ingredient ing = null;
+            Ingredient ing = null;
             while (rs.next()) {
                 ing = new Ingredient();
                 ing.setIngredientId(rs.getInt("ingredientID"));
@@ -122,5 +124,18 @@ public static Ingredient SelectIngredient(int ingID) throws SQLException {
             }
         }
     }
-}
 
+    public static void deleteIngredient(int ingID) throws SQLException {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        try ( Connection connection = pool.getConnection();  PreparedStatement ps = connection.prepareStatement("DELETE FROM ingredient WHERE ingredientID = ?")) {
+
+            ps.setInt(1, ingID);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            LOG.log(Level.SEVERE, "*** delete ingredient SQL", e);
+            throw e;
+        }
+    }
+
+}

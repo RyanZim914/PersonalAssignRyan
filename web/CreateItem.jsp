@@ -1,61 +1,57 @@
-<%-- 
-    Document   : CreateItem
-    Created on : Nov 8, 2023, 7:58:26 PM
-    Author     : ryanz
---%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" %>
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-    </head>
-    <body>
-        <table>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>JSP Page</title>
+</head>
+<body>
+    <a href="./index.jsp">Home</a> 
+    <a href="Private?action=NewIngredientPage">Create ing</a>
+    
+    <table  border="1">
+        <thead>
             <tr>
-                <thead>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th /> 
-                </thead>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Add To Item</th>
             </tr>
+        </thead>
+        <tbody>
+            <c:forEach var="ing" items="${ingredients}">
+                <tr>
+                    <td>${ing.value.name}</td>
+                    <td>$${ing.value.price}</td>
+                    <td>
+                        <form method="POST" action="Private">
+                            <input type="hidden" value="${ing.key}" name="ingID">
+                            <input type="hidden" value="${newItemName}" name="newItemName">
+                            <input type="hidden" value="AddIngToItem" name="action">
+                            <input type="submit" value="Add Ingredient">
+                       </form>
 
-            <tbody>
-    <c:forEach var="ing" items="${ingredients}">
-            <tr>
-                <td>${ing.value.name}</td>
-                <td>$${ing.value.price}</td>
-                 <form method="POST" action="Public">
-                     <input type="hidden" value="${ing.key}" name="ingID">
-                     <input type="hidden" value="AddIngToItem" name="action">
-                <td><input type="submit" Value="Add Ingredient"></td>
-            </tr>
+                    </td>
+                </tr>
+            </c:forEach>
+        </tbody>
+    </table>
+    
+    <br />
+    <form method="POST" action="Private">
+        <label>Name:</label>
+        <input type="text" name="newItemName" value="${newItemName}" required>
+        <input type="hidden" value="CreateNewItem" name="action">
+        <input type="submit" value="Create">
+    </form>
+        <form method="Post" action="Private">
+            <input type="hidden" value="ResetIngredients" name="action">
+            <input type="submit" value="Reset">
         </form>
-    </c:forEach>
-            </tbody>
-        </table>
-        <br />
-            <form>
-                <label>Name: </label>
-                <input type="hidden" value="CreateItem" name="action">
-                <input type="text" name="ItemName" required/>
-                <input type="submit" Create>
-            </form>
-        <br/>
-        <br/>
-            ${itemDescription}<br/>
-            ${total}
-            <h1>Add a New Ingredient</h1>
-           <form action="Public" method="POST">
-               <input type="hidden" name="action" value="addIngredient" />
-               <label>Name: </label>
-               <input type="text" name="ingName" required/>
-               <br/>
-               <label>Price: </label>
-               <input type="text" name="ingPrice" required/>
-               
-            <input type="submit">
-        </form>
-    </body>
+    
+    ${itemDescription}
+    <h3>Total: ${total}</h3>
+
+    <!-- Add appropriate input fields or buttons for removing ingredients in the "Current Item" section -->
+</body>
 </html>

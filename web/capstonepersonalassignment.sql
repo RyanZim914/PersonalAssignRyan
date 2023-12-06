@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 09, 2023 at 07:50 AM
+-- Generation Time: Dec 05, 2023 at 09:39 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -24,6 +24,18 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `cart`
+--
+
+CREATE TABLE `cart` (
+  `CartID` int(11) NOT NULL,
+  `ItemID` int(11) NOT NULL,
+  `totalPrice` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `ingredient`
 --
 
@@ -38,7 +50,17 @@ CREATE TABLE `ingredient` (
 --
 
 INSERT INTO `ingredient` (`ingredientID`, `name`, `price`) VALUES
-(2, 'Lettuce', '0.80');
+(1, 'Olives', '0.90'),
+(2, 'Lettuce', '0.80'),
+(3, 'Ranch', '0.50'),
+(4, 'Tortilla', '1.50'),
+(5, 'Meat', '1.20'),
+(6, 'Sour Cream', '1.00'),
+(7, 'Hard Shell', '2.00'),
+(8, 'Cheese', '0.50'),
+(9, 'Pound Of Meat', '4.00'),
+(10, 'fajita Peppers', '1.50'),
+(24, 'Swiss Chesse', '1.00');
 
 -- --------------------------------------------------------
 
@@ -48,9 +70,172 @@ INSERT INTO `ingredient` (`ingredientID`, `name`, `price`) VALUES
 
 CREATE TABLE `item` (
   `itemID` int(11) NOT NULL,
-  `name` varchar(11) DEFAULT NULL,
-  `totalPrice` decimal(11,0) DEFAULT NULL
+  `name` varchar(64) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `item`
+--
+
+INSERT INTO `item` (`itemID`, `name`) VALUES
+(17, 'Taco Salad'),
+(18, 'Taco'),
+(19, 'Taco'),
+(20, 'Soft Taco'),
+(38, 'dds'),
+(39, 'Bob special');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `itemingred`
+--
+
+CREATE TABLE `itemingred` (
+  `itemID` int(11) NOT NULL,
+  `ingredientID` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `itemingred`
+--
+
+INSERT INTO `itemingred` (`itemID`, `ingredientID`) VALUES
+(17, 1),
+(17, 2),
+(17, 3),
+(17, 4),
+(17, 5),
+(18, 3),
+(18, 4),
+(18, 5),
+(19, 5),
+(19, 7),
+(19, 5),
+(19, 8),
+(19, 7),
+(19, 5),
+(20, 8),
+(20, 7),
+(20, 5),
+(20, 2),
+(0, 12),
+(0, 11),
+(0, 12),
+(0, 24),
+(0, 8),
+(0, 7),
+(0, 6),
+(0, 5),
+(0, 4),
+(0, 3),
+(0, 2),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 2),
+(0, 2),
+(0, 4),
+(0, 9),
+(0, 8),
+(0, 8),
+(0, 7),
+(0, 7),
+(0, 3),
+(0, 7),
+(0, 8),
+(0, 7),
+(0, 10),
+(0, 10),
+(0, 8),
+(0, 7),
+(0, 24),
+(0, 24),
+(0, 8),
+(0, 8),
+(0, 8),
+(0, 10),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 1),
+(0, 7),
+(0, 9),
+(0, 24),
+(0, 9),
+(0, 8),
+(0, 1),
+(0, 8),
+(0, 9),
+(0, 10),
+(0, 10),
+(0, 3),
+(0, 3),
+(0, 4),
+(0, 10),
+(0, 9),
+(0, 8),
+(0, 7),
+(0, 6),
+(38, 9),
+(38, 8),
+(38, 7),
+(39, 9);
 
 -- --------------------------------------------------------
 
@@ -109,13 +294,13 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `ingredient`
 --
 ALTER TABLE `ingredient`
-  MODIFY `ingredientID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `ingredientID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `item`
 --
 ALTER TABLE `item`
-  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `itemID` int(64) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `user`

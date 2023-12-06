@@ -21,8 +21,10 @@ import java.util.logging.Logger;
 
 import business.Items;
 import data.IngredientDB;
+import data.ItemDB;
 import java.util.LinkedHashMap;
 import java.util.List;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -30,6 +32,8 @@ import java.util.List;
  */
 @WebServlet(name = "Public", urlPatterns = {"/Public"})
 public class Public extends HttpServlet {
+
+    Items newItem = new Items();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,125 +47,107 @@ public class Public extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
-        
+        HttpSession session = request.getSession();
+
         String errorMessage = "";
         String url = "";
-
         String action = request.getParameter("action");
-        
+
         if (action == null) {
             action = "index";
         }
 
         switch (action) {
-            case "index":{
+            case "index": {
                 url = "/index.jsp";
                 break;
             }
             case "getList": {
-                request.setAttribute("list", null);  //Come back later
+                try {
+                    LinkedHashMap<Integer, Items> availableItems = ItemDB.selectAllItems();
+                    request.setAttribute("list", availableItems);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Public.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 url = "/ListItems.jsp";
                 break;
-
             }
+
             case "registerForm": {
                 url = "/Register.jsp";
                 break;
             }
-            
+
             case "register": {
-                
                 String username = request.getParameter("username");
                 String firstname = request.getParameter("firstname");
                 String lastname = request.getParameter("lastname");
                 String email = request.getParameter("email");
                 String password = request.getParameter("password");
-                
-                User newUser = new User(username, firstname, lastname, email, password);
-                
-                
-              if (username == (null) || username.isEmpty() || firstname == null || lastname == null || email == null || password == null) {   
+
+                // Validate input
+                if (username == null || username.isEmpty()
+                        || firstname == null || firstname.isEmpty()
+                        || lastname == null || lastname.isEmpty()
+                        || email == null || email.isEmpty()
+                        || password == null || password.isEmpty()) {
+
                     request.setAttribute("username", username);
                     request.setAttribute("firstname", firstname);
                     request.setAttribute("lastname", lastname);
                     request.setAttribute("email", email);
                     request.setAttribute("password", password);
-                    
-                    errorMessage += "You idiot";
-              }
+
+                    errorMessage += "Invalid input. Please fill in all fields.";
+                    url = "/Register.jsp";
+                } else {
                     try {
-//                        User u = new User(username,firstname,lastname,email,password);
+                        User newUser = new User(username, firstname, lastname, email, password);
                         UserDB.insertIntoUser(newUser);
+                        url = "/index.jsp";
                     } catch (SQLException ex) {
                         Logger.getLogger(Public.class.getName()).log(Level.SEVERE, null, ex);
+                        errorMessage += "Registration failed. Please try again.";
+                        url = "/Private?action=RegisterForm";
                     }
-                url = "/index.jsp";
-               break;
-            }
-            
-            case "login": {
-                break;
-            }
-
-            case "AddIngToItem":{
-                action = "temp";
-                /*
-                Get Ingredient
-                Add ing to ing list in item
-                Make Item and fill the ingredient List
-                take the itemid and ingredientId and put it a foreign table
-                then add to item db but leave out the inglist
-                 */
-                
-                int ingredID = Integer.parseInt(request.getParameter("ingID"));
-                Ingredient ing;
-                List<Ingredient> ings = new ArrayList<>();//add this to the Item
-                try {
-                    ing = IngredientDB.SelectIngredient(ingredID);
-                    ings.add(ing); //added to the array
-                } catch (SQLException ex) {
-                    Logger.getLogger(Public.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                Items item = new Items();
-                item.setIng(ings);
-                request.setAttribute("itemDescription", item.ingString());
-                request.setAttribute("total", item.getTotalPrice());
-                
-                
-            }
-           case "temp":{
-                url="/CreateItem.jsp";
-                LinkedHashMap<Integer, Ingredient> list = new LinkedHashMap<>();
-                try {
-                     list = IngredientDB.selectAllIngredients();
-                     request.setAttribute("ingredients", list);
-                } catch (SQLException ex) {
-                    Logger.getLogger(Public.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 break;
             }
-            
-            case "CreateItem":{}
-                String itemName = request.getParameter("ItemName");
-                Items item = new Items(itemName);
-                break;
-            case "addIngredient":{
-                String name = request.getParameter("ingName");
-                double price = Double.parseDouble(request.getParameter("ingPrice"));
-                url="/index.jsp";
-                        
-            try {
-                IngredientDB.insertIntoIngredient(new Ingredient(name, price));
-            } catch (SQLException ex) {
-                Logger.getLogger(Public.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            }
 
+case "login": {
+    String username = request.getParameter("username");
+    String password = request.getParameter("password");
+
+    // Perform validation (you might want to do more robust validation)
+    if (username != null && !username.isEmpty() && password != null && !password.isEmpty()) {
+        // If valid, redirect to index.jsp
+        try {
+            User loginedUser = UserDB.getUser(username, password);
+            if (loginedUser != null){
+                session.setAttribute("loginedUser", loginedUser);
+        }
+        } catch (SQLException ex) {
+            Logger.getLogger(Public.class.getName()).log(Level.SEVERE, null, ex);
+            errorMessage += "Failed UserDB";
+            url = "/Login.jsp";
+        }
+        url = "/index.jsp";
+    } else {
+        // If invalid, redirect back to the login form
+        url = "/Login.jsp";
+        errorMessage = "Invalid username or password. Please try again.";
+    }
+    break;
+}
+    case "logout":{
+        session.setAttribute("loginedUser", null);
+        url="/Login.jsp";
+        break;
+    }
 
         }
         request.setAttribute("errorMessage", errorMessage);
-        
+
         getServletContext()
                 .getRequestDispatcher(url)
                 .forward(request, response);
